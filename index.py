@@ -1,5 +1,9 @@
-import secrets
-from slackclient import SlackClient
+#!/usr/bin/env python
+
+import cgi;
+import cgitb;cgitb.enable()
+
+import secrets from slackclient import SlackClient
 
 slack_token = secrets.SLACK_BOT_TOKEN
 sc = SlackClient(slack_token)
