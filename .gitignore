@@ -1,0 +1,4 @@
+*.pyc
+secrets.py
+deploy/*
+deploy
