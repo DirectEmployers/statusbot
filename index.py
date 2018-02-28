@@ -3,21 +3,30 @@
 import cgi;
 import cgitb;cgitb.enable()
 
-import secrets from slackclient import SlackClient
+print "Content-type: application/json"
+print ""
+
+import secrets
+from slackclient import SlackClient
+import os, sys
+import requests
+import urllib
 
 slack_token = secrets.SLACK_BOT_TOKEN
 sc = SlackClient(slack_token)
 
 
-
-#print user_list['members'][0]
-
 class statusBot():
     def __init__(self):
+        self.query_params = self.parseQS()
         self.status_list()
         #self.set_status('jasonsole','remote test',':house_with_garden:')
-    
+        #print self.query_params
+
     def set_status(self,username,status,emoji):
+        '''
+        prototype code. sets requesting user's status.
+        '''
         user_list = sc.api_call(
             "users.list"
         )
@@ -35,50 +44,99 @@ class statusBot():
             profile='{"status_text": "Working remotely","status_emoji": ":house_with_garden:"}'
             )
         #print slack_user
-        print test
+        #print test
         """
             profile=slack_user_id,
             status_text=status,
             status_emoji=emoji
         """
+
         
     def status_list(self):
+        '''
+        Retrives the user list and assigns each user to a bucket based on their status. Using
+        the post response_url, it then posts a message back to slack with the buckets.
+        If a user's status is blank, it gets ignored.
+
+        TODO:
+        - Request a specific bucket
+        - Broadcast to entire channel
+        - only list users of the given channel 
+
+        '''
         remote_list = []
+        sick_list = []
         pto_list = []
         other_status = []
         user_list = sc.api_call(
             "users.list",
             presence="true"
         )
+
+        # look at each user status and assign that user to a bucket based on the value
         for user in user_list['members']:
-            #print "%s - %s" % (user['profile']['real_name'],user['profile']['status_text'])
             if user['profile']['status_text'] == "Working remotely":
                 remote_list.append(user['profile']['real_name'])
             elif user['profile']['status_text'] == "PTO":
                 pto_list.append(user['profile']['real_name'])
+            elif user['profile']['status_text'] == "Out sick":
+                sick_list.append(user['profile']['real_name'])
             else:
                 if user['profile']['status_text'] != "":
                     other_status.append(
                         [user['profile']['real_name'],
-                        user['profile']['status_text']]
+                        user['profile']['status_text'],
+                        user['profile']['status_emoji']]
                         )
-        
+
+        #build the response message        
         msg = ""
-        msg += "People working remote today:\n"
+        msg += ":house_with_garden: *People working remote today:*\n"
         for remote in remote_list:
             msg += "    %s\n" % remote
-        
-        msg += "\nPeople on PTO today:\n"
+
+        msg += "\n:palm_tree: *People on PTO today:*\n"
         for pto in pto_list:
             msg += "    %s\n" % pto
-        
-        msg += "\nOther statuses:\n"
+
+        msg += "\n*:face_with_thermometer: People out sick today:*\n"
+        for pto in sick_list:
+            msg += "    %s\n" % pto
+
+        msg += "\n*Other statuses:*\n"
         for status in other_status:
-            msg += "    %s - %s\n" % (status[0],status[1])
-            
-        sc.api_call(
-          "chat.postMessage",
-          channel="#open-test",
-          text=msg
-        )
+            msg += "    %s %s - %s\n" % (status[2],status[0],status[1])
+
+        # read post variables so that we can post pack to the correct channel.
+        qs=sys.stdin.read()
+        nvps = self.parseQS(qs)
+        the_url = nvps['response_url']
+        webhook_url = urllib.unquote(the_url)
+
+        # write the json paylod. Set to "ephemeral" so only requester gets a response
+        the_json = "{'response_type':'ephemeral','text':'%s'}" % msg
+
+        # post  amessage back to channel where it was requested
+        requests.post(url=webhook_url, data=the_json)
+
+
+    def parseQS(self,qs=False):
+        '''
+        Given a query string (qs), parse it and return it as a dict.
+
+        '''
+        if qs==False:
+            qs = os.environ['QUERY_STRING']
+        nvps = {}
+        if qs:
+             qs_array = qs.split("&")
+             nvdict = {}
+             for qsa in qs_array:
+                 pairs = qsa.split("=")
+                 nvps[pairs[0]]=pairs[1]
+        else: #if all else fails, post back to general
+            nvps['channel']='general'
+        return nvps
+statusBot()
+
     
