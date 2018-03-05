@@ -84,9 +84,9 @@ class statusBot():
             else:
                 if user['profile']['status_text'] != "":
                     other_status.append(
-                        [user['profile']['real_name'],
-                        user['profile']['status_text'],
-                        user['profile']['status_emoji']]
+                        [urllib.quote(user['profile']['real_name']),
+                        urllib.quote(user['profile']['status_text']),
+                        urllib.quote(user['profile']['status_emoji'])]
                         )
 
         #build the response message        
@@ -114,7 +114,7 @@ class statusBot():
         webhook_url = urllib.unquote(the_url)
 
         # write the json paylod. Set to "ephemeral" so only requester gets a response
-        the_json = "{'response_type':'ephemeral','text':'%s'}" % msg
+        the_json = '{"response_type":"ephemeral","text":"%s"}' % urllib.unquote(msg)
 
         # post  amessage back to channel where it was requested
         requests.post(url=webhook_url, data=the_json)
