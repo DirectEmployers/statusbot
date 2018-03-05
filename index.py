@@ -81,13 +81,17 @@ class statusBot():
                 pto_list.append(user['profile']['real_name'])
             elif user['profile']['status_text'] == "Out sick":
                 sick_list.append(user['profile']['real_name'])
-            else:
-                if user['profile']['status_text'] != "":
-                    other_status.append(
-                        [urllib.quote(user['profile']['real_name']),
-                        urllib.quote(user['profile']['status_text']),
-                        urllib.quote(user['profile']['status_emoji'])]
-                        )
+            else:   
+                # Prevent failure if people people wierd stuff in the status.
+                try:
+                    if user['profile']['status_text'] != "":
+                        other_status.append(
+                            [urllib.quote(user['profile']['real_name']),
+                            urllib.quote(user['profile']['status_text']),
+                            urllib.quote(user['profile']['status_emoji'])]
+                            )
+                except:
+                    pass
 
         #build the response message        
         msg = ""
