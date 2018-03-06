@@ -20,8 +20,6 @@ class statusBot():
     def __init__(self):
         self.query_params = self.parseQS()
         self.status_list()
-        #self.set_status('jasonsole','remote test',':house_with_garden:')
-        #print self.query_params
 
     def status_list(self):
         '''
@@ -39,6 +37,12 @@ class statusBot():
         sick_list = []
         pto_list = []
         other_status = []
+        nvps = self.parseQS(qs)
+        try:
+            flags = nvps['text']
+        except KeyError:
+            flags = ""
+            
         user_list = sc.api_call(
             "users.list",
             presence="true"
@@ -77,14 +81,13 @@ class statusBot():
         msg += "\n*:face_with_thermometer: People out sick today:*\n"
         for pto in sick_list:
             msg += "    %s\n" % pto
-
-        msg += "\n*Other statuses:*\n"
+            
+        msg += "\n*Other statuses: %s*\n" % flags
         for status in other_status:
             msg += "    %s %s - %s\n" % (status[2],status[0],status[1])
 
         # read post variables so that we can post pack to the correct channel.
         qs=sys.stdin.read()
-        nvps = self.parseQS(qs)
         the_url = nvps['response_url']
         webhook_url = urllib.unquote(the_url)
 
