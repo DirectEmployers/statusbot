@@ -45,10 +45,11 @@ class statusBot():
             flags = ""
         
         if "here" in flags:
-            user_list = sc.api_call(
+            channel_detail = sc.api_call(
                 "channels.info",
                 channel=nvps["channel_id"]
-            )["channel"]["members"]
+            )
+            user_list = channel_detail['channel']['members']
         else:
             user_list = sc.api_call(
                 "users.list",
