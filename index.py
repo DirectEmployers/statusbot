@@ -28,7 +28,6 @@ class statusBot():
         If a user's status is blank, it gets ignored.
 
         TODO:
-        - Request a specific bucket
         - Broadcast to entire channel
         - only list users of the given channel 
 
@@ -44,11 +43,17 @@ class statusBot():
             flags = nvps['text']
         except KeyError:
             flags = ""
-            
-        user_list = sc.api_call(
-            "users.list",
-            presence="true"
-        )
+        
+        if "here" in flags:
+            user_list = sc.api_call(
+                "channels.info",
+                channel=nvps["channel_id"]
+            )["members"]
+        else:
+            user_list = sc.api_call(
+                "users.list",
+                presence="true"
+            )
         # look at each user status and assign that user to a bucket based on the value
         for user in user_list['members']:
             if (
