@@ -23,35 +23,6 @@ class statusBot():
         #self.set_status('jasonsole','remote test',':house_with_garden:')
         #print self.query_params
 
-    def set_status(self,username,status,emoji):
-        '''
-        prototype code. sets requesting user's status.
-        '''
-        user_list = sc.api_call(
-            "users.list"
-        )
-        slack_user_id = ""
-        for user in user_list['members']:
-            if user['name']==username:
-                slack_user_id=user["id"]
-        #print slack_user_id
-        slack_user = sc.api_call(
-            "users.info",
-            user=slack_user_id
-            )
-        test = sc.api_call(
-            "users.profile.set",
-            profile='{"status_text": "Working remotely","status_emoji": ":house_with_garden:"}'
-            )
-        #print slack_user
-        #print test
-        """
-            profile=slack_user_id,
-            status_text=status,
-            status_emoji=emoji
-        """
-
-        
     def status_list(self):
         '''
         Retrives the user list and assigns each user to a bucket based on their status. Using
@@ -141,6 +112,34 @@ class statusBot():
         else: #if all else fails, post back to general
             nvps['channel']='general'
         return nvps
+        
+    def set_status(self,username,status,emoji):
+        '''
+        prototype code. sets requesting user's status.
+        '''
+        user_list = sc.api_call(
+            "users.list"
+        )
+        slack_user_id = ""
+        for user in user_list['members']:
+            if user['name']==username:
+                slack_user_id=user["id"]
+        #print slack_user_id
+        slack_user = sc.api_call(
+            "users.info",
+            user=slack_user_id
+            )
+        test = sc.api_call(
+            "users.profile.set",
+            profile='{"status_text": "Working remotely","status_emoji": ":house_with_garden:"}'
+            )
+        #print slack_user
+        #print test
+        """
+            profile=slack_user_id,
+            status_text=status,
+            status_emoji=emoji
+        """
 statusBot()
 
     
