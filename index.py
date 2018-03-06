@@ -44,17 +44,9 @@ class statusBot():
         except KeyError:
             flags = ""
         
-        if "here" in flags:
-            channel_detail = sc.api_call(
-                "channels.info",
-                channel=nvps["channel_id"]
-            )
-            user_list = channel_detail['channel']['members']
-        else:
-            user_list = sc.api_call(
-                "users.list",
-                presence="true"
-            )
+        # get the user list
+        user_list = sc.api_call("users.list")
+        
         # look at each user status and assign that user to a bucket based on the value
         for user in user_list['members']:
             if (
