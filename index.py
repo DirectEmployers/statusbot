@@ -37,6 +37,8 @@ class statusBot():
         sick_list = []
         pto_list = []
         other_status = []
+        # read post variables so that we can post pack to the correct channel.
+        qs=sys.stdin.read()
         nvps = self.parseQS(qs)
         try:
             flags = nvps['text']
@@ -86,8 +88,6 @@ class statusBot():
         for status in other_status:
             msg += "    %s %s - %s\n" % (status[2],status[0],status[1])
 
-        # read post variables so that we can post pack to the correct channel.
-        qs=sys.stdin.read()
         the_url = nvps['response_url']
         webhook_url = urllib.unquote(the_url)
 
