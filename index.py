@@ -52,11 +52,11 @@ class statusBot():
 
         # look at each user status and assign that user to a bucket based on the value
         for user in user_list['members']:
-            if user['profile']['status_text'] == "Working remotely":
+            if "remote" in user['profile']['status_text'].lower():
                 remote_list.append(user['profile']['real_name'])
-            elif user['profile']['status_text'] == "PTO":
+            elif "pto" in user['profile']['status_text'].lower():
                 pto_list.append(user['profile']['real_name'])
-            elif user['profile']['status_text'] == "Out sick":
+            elif "sick" in user['profile']['status_text'].lower():
                 sick_list.append(user['profile']['real_name'])
             else:   
                 # Prevent failure if people people wierd stuff in the status.
