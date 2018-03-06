@@ -87,7 +87,7 @@ class statusBot():
             for pto in sick_list:
                 msg += "    %s\n" % pto
         
-        if flags == "" or "other" in flags:
+        if (flags == "" or "other" in flags) and "simple" not in flags:
             msg += "\n*Other statuses: *\n"
             for status in other_status:
                 msg += "    %s %s - %s\n" % (status[2],status[0],status[1])
