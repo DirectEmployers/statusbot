@@ -48,7 +48,7 @@ class statusBot():
             user_list = sc.api_call(
                 "channels.info",
                 channel=nvps["channel_id"]
-            )["members"]
+            )["channel"]["members"]
         else:
             user_list = sc.api_call(
                 "users.list",
