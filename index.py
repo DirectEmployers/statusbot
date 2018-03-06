@@ -49,10 +49,12 @@ class statusBot():
             "users.list",
             presence="true"
         )
-
         # look at each user status and assign that user to a bucket based on the value
         for user in user_list['members']:
-            if "remote" in user['profile']['status_text'].lower():
+            if (
+                "remote" in user['profile']['status_text'].lower() or
+                "wfh" in user['profile']['status_text'].lower()
+                ):
                 remote_list.append(user['profile']['real_name'])
             elif "pto" in user['profile']['status_text'].lower():
                 pto_list.append(user['profile']['real_name'])
