@@ -72,22 +72,22 @@ class statusBot():
 
         #build the response message        
         msg = ""
-        if flags == "" or "remote" in flags:
+        if flags == "" or "remote" in flags or "simple" in flags:
             msg += ":house_with_garden: *People working remote today:*\n"
             for remote in remote_list:
                 msg += "    %s\n" % remote
                 
-        if flags == "" or "pto" in flags:
+        if flags == "" or "pto" in flags or "simple" in flags:
             msg += "\n:palm_tree: *People on PTO today:*\n"
             for pto in pto_list:
                 msg += "    %s\n" % pto
 
-        if flags == "" or "sick" in flags:
+        if flags == "" or "sick" in flags or "simple" in flags:
             msg += "\n*:face_with_thermometer: People out sick today:*\n"
             for pto in sick_list:
                 msg += "    %s\n" % pto
         
-        if flags != "simple" or "other" in flags:
+        if flags == "" or "other" in flags:
             msg += "\n*Other statuses: *\n"
             for status in other_status:
                 msg += "    %s %s - %s\n" % (status[2],status[0],status[1])
