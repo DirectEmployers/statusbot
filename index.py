@@ -74,7 +74,12 @@ class statusBot():
 
         #build the response message        
         msg = ""
-        if flags == "" or "remote" in flags or "simple" in flags:
+        if (
+            flags == "" or 
+            "remote" in flags or 
+            "simple" in flags or 
+            "wfh" in flags
+            ):
             msg += ":house_with_garden: *People working remote today:*\n"
             for remote in remote_list:
                 msg += "    %s\n" % remote
