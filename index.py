@@ -83,8 +83,9 @@ class statusBot():
         msg += "\n*:face_with_thermometer: People out sick today:*\n"
         for pto in sick_list:
             msg += "    %s\n" % pto
-            
-        msg += "\n*Other statuses: %s*\n" % flags
+        
+        if flags != "simple":
+        msg += "\n*Other statuses: *\n"
         for status in other_status:
             msg += "    %s %s - %s\n" % (status[2],status[0],status[1])
 
