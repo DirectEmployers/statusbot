@@ -64,7 +64,7 @@ class statusBot():
                     if user['profile']['status_text'] != "":
                         other_status.append(
                             [urllib.quote(user['profile']['real_name']),
-                            urllib.quote(user['profile']['status_text']),
+                            urllib.quote(user['profile']['status_text'].encode('utf8')),
                             urllib.quote(user['profile']['status_emoji'])]
                             )
                 except:
