@@ -95,7 +95,11 @@ class statusBot():
         if (flags == "" or "other" in flags) and "simple" not in flags:
             msg += "\n*Other statuses: *\n"
             for status in other_status:
-                msg += "    %s %s - %s\n" % (status[2],status[0],status[1])
+                user_name = status[0]
+                user_status = status[1]
+                user_emoji = status[2]
+                msg = msg.encode('utf8')
+                msg += "    %s %s - %s\n" % (user_emoji,user_name,user_status)
 
         the_url = nvps['response_url']
         webhook_url = urllib.unquote(the_url)
