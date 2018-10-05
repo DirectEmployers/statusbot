@@ -105,7 +105,9 @@ class statusBot():
         webhook_url = urllib.unquote(the_url)
 
         # write the json paylod. Set to "ephemeral" so only requester gets a response
-        the_json = '{"response_type":"ephemeral","text":"%s"}' % urllib.unquote(msg)
+        msg = urllib.unquote(msg)
+        msg = msg.replace('"','\\"') #quotes break the json
+        the_json = '{"response_type":"ephemeral","text":"%s"}' % msg
 
         # post  amessage back to channel where it was requested
         requests.post(url=webhook_url, data=the_json)
