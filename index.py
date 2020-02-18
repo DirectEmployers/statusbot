@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2.7
 
 import cgi;
 import cgitb;cgitb.enable()
@@ -29,7 +29,7 @@ class statusBot():
 
         TODO:
         - Broadcast to entire channel
-        - only list users of the given channel 
+        - only list users of the given channel
 
         '''
         remote_list = []
@@ -43,10 +43,10 @@ class statusBot():
             flags = nvps['text']
         except KeyError:
             flags = ""
-        
+
         # get the user list
         user_list = sc.api_call("users.list")
-        
+
         # look at each user status and assign that user to a bucket based on the value
         for user in user_list['members']:
             if (
@@ -58,7 +58,7 @@ class statusBot():
                 pto_list.append(user['profile']['real_name'])
             elif "sick" in user['profile']['status_text'].lower():
                 sick_list.append(user['profile']['real_name'])
-            else:   
+            else:
                 # Prevent failure if people people wierd stuff in the status.
                 try:
                     if user['profile']['status_text'] != "":
@@ -70,18 +70,18 @@ class statusBot():
                 except:
                     pass
 
-        #build the response message        
+        #build the response message
         msg = ""
         if (
-            flags == "" or 
-            "remote" in flags or 
-            "simple" in flags or 
+            flags == "" or
+            "remote" in flags or
+            "simple" in flags or
             "wfh" in flags
             ):
             msg += ":house_with_garden: *People working remote today:*\n"
             for remote in remote_list:
                 msg += "    %s\n" % remote
-                
+
         if flags == "" or "pto" in flags or "simple" in flags:
             msg += "\n:palm_tree: *People on PTO today:*\n"
             for pto in pto_list:
@@ -91,7 +91,7 @@ class statusBot():
             msg += "\n*:face_with_thermometer: People out sick today:*\n"
             for pto in sick_list:
                 msg += "    %s\n" % pto
-        
+
         if (flags == "" or "other" in flags) and "simple" not in flags:
             msg += "\n*Other statuses: *\n"
             for status in other_status:
@@ -130,7 +130,7 @@ class statusBot():
         else: #if all else fails, post back to general
             nvps['channel']='general'
         return nvps
-        
+
     def set_status(self,username,status,emoji):
         '''
         prototype code. sets requesting user's status.
@@ -159,5 +159,3 @@ class statusBot():
             status_emoji=emoji
         """
 statusBot()
-
-    
