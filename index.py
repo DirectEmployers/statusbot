@@ -13,7 +13,7 @@ import requests
 import urllib
 
 slack_token = secrets.SLACK_BOT_TOKEN
-sc = SlackClient(slack_token)
+sc = SlackClient(token=slack_token,ssl=True)
 
 
 class statusBot():
