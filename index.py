@@ -102,10 +102,10 @@ class statusBot():
                 msg += "    %s %s - %s\n" % (user_emoji,user_name,user_status)
 
         the_url = nvps['response_url']
-        webhook_url = urllib.unquote(the_url)
+        webhook_url = urllib.parse.unquote(the_url)
 
         # write the json paylod. Set to "ephemeral" so only requester gets a response
-        msg = urllib.unquote(msg)
+        msg = urllib.parse.unquote(msg)
         msg = msg.replace('"','\\"') #quotes break the json
         the_json = '{"response_type":"ephemeral","text":"%s"}' % msg
 
